@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALPES · Briefing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F5F0;
+      --bg2: #EFEDE7;
+      --surface: #FFFFFF;
+      --border: #E2DDD4;
+      --text: #1A1814;
+      --text2: #6B6560;
+      --text3: #A09A92;
+      --red: #C0392B;
+      --amber: #D4820A;
+      --green: #2E7D5A;
+      --blue: #2C5F8A;
+      --accent: #8B4513;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* Header */
+    .header {
+      background: var(--text);
+      color: var(--bg);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      color: #F7F5F0;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #A09A92;
+    }
+
+    .header-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: #A09A92;
+      text-align: right;
+    }
+
+    /* Main */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* Refresh bar */
+    .refresh-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .refresh-status {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    .refresh-status span {
+      font-family: 'DM Mono', monospace;
+      color: var(--text3);
+      font-size: 11px;
+      margin-left: 8px;
+    }
+
+    .btn {
+      padding: 9px 20px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .btn-primary:hover { background: #333; }
+    .btn-primary:disabled { background: var(--border); color: var(--text3); cursor: not-allowed; }
+
+    .btn-sm {
+      padding: 5px 12px;
+      font-size: 12px;
+      background: var(--bg2);
+      color: var(--text2);
+      border: 1px solid var(--border);
+    }
+
+    .btn-sm:hover { background: var(--border); }
+
+    /* Stats row */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .stat-value.red { color: var(--red); }
+    .stat-value.amber { color: var(--amber); }
+    .stat-value.green { color: var(--green); }
+    .stat-value.blue { color: var(--blue); }
+
+    /* Section */
+    .section {
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeUp 0.3s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--text2);
+    }
+
+    .section-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    /* Task list */
+    .task-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: background 0.1s;
+    }
+
+    .task:hover { background: var(--bg2); }
+
+    .task-folder {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text3);
+      min-width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-context {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--bg2);
+      color: var(--text2);
+      white-space: nowrap;
+      border: 1px solid var(--border);
+    }
+
+    .task-title {
+      font-size: 13px;
+      color: var(--text);
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-date {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text3);
+      white-space: nowrap;
+    }
+
+    /* Persona filter */
+    .persona-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .persona-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 12px;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .persona-btn:hover, .persona-btn.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text3);
+      font-size: 14px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--text);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--text3);
+      font-size: 13px;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+    }
+
+    /* Funnel */
+    .funnel {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .funnel-stage {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .funnel-stage-name {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+    }
+
+    .funnel-stage-count {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--text);
+    }
+
+    .section-title-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--text);
+      margin-bottom: 12px;
+      margin-top: 32px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .funnel { grid-template-columns: repeat(3, 1fr); }
+      .header { padding: 16px 20px; }
+      .main { padding: 24px 16px; }
+      .task-folder { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">ALPES · MapleFarm</div>
+    <div class="logo-sub">Morning Briefing</div>
+  </div>
+  <div class="header-date" id="headerDate">—</div>
+</div>
+
+<div class="main">
+
+  <!-- Refresh bar -->
+  <div class="refresh-bar">
+    <div class="refresh-status" id="statusText">
+      Pronto. <span id="lastUpdate">Mai aggiornato</span>
+    </div>
+    <button class="btn btn-primary" id="refreshBtn" onclick="loadAll()">
+      ↻ &nbsp;Aggiorna
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div id="content">
+    <div class="empty">Clicca <strong>Aggiorna</strong> per caricare il briefing di oggi.</div>
+  </div>
+
+</div>
+
+<script>
+  const CLIENT_ID = 'claudealpesassistant';
+  const CLIENT_SECRET = 'api69e3dd3b833d2';
+  const REFRESH_TOKEN = '261acf6db4e886bfb6d70a9ceeaa26d01f3e4799';
+
+  let accessToken = localStorage.getItem('td_access_token') || '4efcf092c6995d05fd1e103b7888e13fc8048be1';
+  let tokenExpiry = parseInt(localStorage.getItem('td_token_expiry') || '0');
+
+  // Date header
+  const now = new Date();
+  document.getElementById('headerDate').textContent =
+    now.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+  async function refreshToken() {
+    const params = new URLSearchParams({
+      grant_type: 'refresh_token',
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      refresh_token: REFRESH_TOKEN
+    });
+    const res = await fetch('https://api.toodledo.com/3/account/token.php', {
+      method: 'POST', body: params
+    });
+    const data = await res.json();
+    if (data.access_token) {
+      accessToken = data.access_token;
+      tokenExpiry = Date.now() + (data.expires_in - 300) * 1000;
+      localStorage.setItem('td_access_token', accessToken);
+      localStorage.setItem('td_token_expiry', tokenExpiry);
+    }
+  }
+
+  async function api(endpoint) {
+    if (Date.now() > tokenExpiry) await refreshToken();
+    const res = await fetch(`https://api.toodledo.com/3/${endpoint}`, {
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    return res.json();
+  }
+
+  function fmtDate(ts) {
+    if (!ts) return '';
+    return new Date(ts * 1000).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' });
+  }
+
+  function isToday(ts) {
+    const d = new Date(ts * 1000);
+    const t = new Date();
+    return d.getDate() === t.getDate() && d.getMonth() === t.getMonth() && d.getFullYear() === t.getFullYear();
+  }
+
+  function isTomorrow(ts) {
+    const d = new Date(ts * 1000);
+    const t = new Date(); t.setDate(t.getDate() + 1);
+    return d.getDate() === t.getDate() && d.getMonth() === t.getMonth() && d.getFullYear() === t.getFullYear();
+  }
+
+  function isPast(ts) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    return new Date(ts * 1000) < today;
+  }
+
+  let allTasks = [], folders = {}, contexts = {}, activePersona = 'Tutti';
+
+  async function loadAll() {
+    const btn = document.getElementById('refreshBtn');
+    btn.disabled = true; btn.textContent = '⟳  Caricamento...';
+    document.getElementById('statusText').innerHTML = 'Aggiornamento in corso... <span></span>';
+
+    try {
+      const [fData, cData, tData] = await Promise.all([
+        api('folders/get.php'),
+        api('contexts/get.php'),
+        api('tasks/get.php?fields=folder,context,duedate,priority&comp=0&start=0&num=500')
+      ]);
+
+      folders = {};
+      fData.forEach(f => folders[f.id] = f.name);
+      contexts = {};
+      cData.forEach(c => contexts[c.id] = c.name);
+      allTasks = tData.slice(1).filter(t => folders[t.folder] !== '10. CHIUSO perso');
+
+      renderAll();
+
+      const time = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('statusText').innerHTML = `Aggiornato alle ${time} <span id="lastUpdate"></span>`;
+
+    } catch(e) {
+      document.getElementById('content').innerHTML = `<div class="empty">❌ Errore di connessione. Riprova.</div>`;
+    }
+
+    btn.disabled = false; btn.textContent = '↻  Aggiorna';
+  }
+
+  function renderAll() {
+    const filtered = activePersona === 'Tutti'
+      ? allTasks
+      : allTasks.filter(t => contexts[t.context] === activePersona);
+
+    const scaduti = filtered.filter(t => t.duedate && isPast(t.duedate));
+    const oggi = filtered.filter(t => t.duedate && isToday(t.duedate));
+    const domani = filtered.filter(t => t.duedate && isTomorrow(t.duedate));
+
+    // Funnel counts
+    const funnelData = [
+      { name: 'Contattare', key: '1. Contattare/Visitare' },
+      { name: 'Offerta', key: '2. Inviare offerta' },
+      { name: '1° Sollecito', key: '4. Primo sollecito' },
+      { name: '2° Sollecito', key: '5. Secondo sollecito' },
+      { name: 'Chiuso', key: '10. CHIUSO perso' },
+    ];
+
+    const allTasksAll = allTasks;
+    const funnelCounts = funnelData.map(f => ({
+      ...f,
+      count: Object.values(folders).includes(f.key)
+        ? allTasksAll.filter(t => folders[t.folder] === f.key).length
+        : 0
+    }));
+
+    // Personas
+    const personaList = ['Tutti', ...new Set(
+      allTasks.map(t => contexts[t.context]).filter(c => c && c.startsWith('@')).sort()
+    )];
+
+    let html = '';
+
+    // Stats
+    html += `<div class="stats">
+      <div class="stat"><div class="stat-label">Scaduti</div><div class="stat-value red">${scaduti.length}</div></div>
+      <div class="stat"><div class="stat-label">Oggi</div><div class="stat-value amber">${oggi.length}</div></div>
+      <div class="stat"><div class="stat-label">Domani</div><div class="stat-value green">${domani.length}</div></div>
+      <div class="stat"><div class="stat-label">Task totali</div><div class="stat-value blue">${filtered.length}</div></div>
+    </div>`;
+
+    // Funnel
+    html += `<div class="section-title-main">Funnel Commerciale</div>`;
+    html += `<div class="funnel">`;
+    funnelCounts.forEach(f => {
+      html += `<div class="funnel-stage">
+        <div class="funnel-stage-name">${f.name}</div>
+        <div class="funnel-stage-count">${f.count}</div>
+      </div>`;
+    });
+    html += `</div>`;
+
+    // Persona filter
+    html += `<div class="section-title-main">Task per persona</div>`;
+    html += `<div class="persona-bar">`;
+    personaList.forEach(p => {
+      html += `<button class="persona-btn ${p === activePersona ? 'active' : ''}" onclick="setPersona('${p}')">${p}</button>`;
+    });
+    html += `</div>`;
+
+    // Task sections
+    const sections = [
+      { label: '🔴 Scaduti', color: '#C0392B', list: scaduti },
+      { label: '🟡 Oggi', color: '#D4820A', list: oggi },
+      { label: '🟢 Domani', color: '#2E7D5A', list: domani },
+    ];
+
+    sections.forEach(({ label, color, list }, i) => {
+      if (!list.length) return;
+      html += `<div class="section" style="animation-delay:${i * 0.08}s">
+        <div class="section-header">
+          <div class="section-dot" style="background:${color}"></div>
+          <div class="section-title">${label}</div>
+          <div class="section-count">${list.length} task</div>
+        </div>
+        <div class="task-list">`;
+      list.forEach(t => {
+        const folder = folders[t.folder] || '—';
+        const context = contexts[t.context] || '—';
+        html += `<div class="task">
+          <div class="task-folder">${folder}</div>
+          <div class="task-context">${context}</div>
+          <div class="task-title">${t.title}</div>
+          <div class="task-date">${fmtDate(t.duedate)}</div>
+        </div>`;
+      });
+      html += `</div></div>`;
+    });
+
+    if (!scaduti.length && !oggi.length && !domani.length) {
+      html += `<div class="empty">✨ Nessun task in scadenza. Ottimo lavoro!</div>`;
+    }
+
+    document.getElementById('content').innerHTML = html;
+  }
+
+  function setPersona(p) {
+    activePersona = p;
+    renderAll();
+  }
+</script>
+</body>
+</html>
